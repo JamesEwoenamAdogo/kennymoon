@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1789156889531,
+      "tag": "0000_super_admin_bypass_and_promote",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789262427510,
+      "tag": "0001_create_otps",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789327501778,
+      "tag": "0002_create_warehouse_arrivals",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,0 +1,219 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.2",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://xmplhkwngiedqrfxfdpa.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "orbit-express-build",
+      "version": "0.1.0",
+      "title": "Orbit Express Build"
+    },
+    "tools": [
+      {
+        "name": "get_shipping_rates",
+        "title": "Get shipping rates and quote",
+        "description": "Return Kennymoon's current China-to-Nigeria sea and air freight rates, RMB rate, China warehouse address, and an optional Naira estimate for a given weight, mode and pickup city.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "sea",
+                "air"
+              ],
+              "description": "Freight mode to estimate."
+            },
+            "weight_kg": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Chargeable weight in kilograms."
+            },
+            "pickup_city": {
+              "type": "string",
+              "enum": [
+                "Lagos",
+                "Onitsha",
+                "Kano"
+              ],
+              "description": "Nigerian pickup city for handling fees."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "track_shipment",
+        "title": "Track a shipment",
+        "description": "Look up a Kennymoon shipment by its waybill number and return its current status plus its journey events.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "waybill": {
+              "type": "string",
+              "minLength": 3,
+              "description": "The waybill number, e.g. KM-2024-0142."
+            }
+          },
+          "required": [
+            "waybill"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_shipments",
+        "title": "List my shipments",
+        "description": "List the signed-in customer's Kennymoon shipments with waybill, mode, status, weight and ETA.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "description": "Maximum rows to return."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_parcels",
+        "title": "List my pre-alerted parcels",
+        "description": "List the signed-in customer's pre-alerted parcels waiting at or heading to the Kennymoon China warehouse.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "description": "Maximum rows to return."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_parcel_prealert",
+        "title": "Pre-alert a parcel",
+        "description": "Create a parcel pre-alert for the signed-in customer so Kennymoon's China warehouse can match the incoming package.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "tracking_number": {
+              "type": "string",
+              "minLength": 3,
+              "description": "The Chinese courier tracking number given by the seller."
+            },
+            "description": {
+              "type": "string",
+              "minLength": 2,
+              "description": "What is inside the parcel."
+            },
+            "seller": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Seller or store name."
+            },
+            "quantity": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "description": "Number of cartons or items."
+            },
+            "expected_weight_kg": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Expected weight in kilograms, if known."
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "sea",
+                "air"
+              ],
+              "default": "sea",
+              "description": "Preferred freight mode."
+            }
+          },
+          "required": [
+            "tracking_number",
+            "description"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_rmb_transactions",
+        "title": "List my RMB payments",
+        "description": "List the signed-in customer's RMB payment transactions to Chinese suppliers, with amounts and rates used.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20,
+              "description": "Maximum rows to return."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
